@@ -18,6 +18,13 @@ def get_points(img):
 
 rtoh = lambda rgb: '#%s' % ''.join(('%02x' % p for p in rgb))
 
+def lighter_colour(colour):
+    ret = colour + 20
+    if ret > 255:
+        return 255
+    else:
+        return ret
+
 def colorz(filename, n=3):
     img = Image.open(filename)
     img.thumbnail((200, 200))
@@ -31,9 +38,23 @@ def colorz(filename, n=3):
 
 #        colours_sort.sort(key=lambda  x:darkness(x), reverse=True)
     rgbs_ = list(rgbs)
-    rgbs_.sort(reverse=True)
+    rgbs_.sort()
+
+    ret = list(rgbs_)
+    
+    
+    print "++++++++"
     for c in rgbs_:
+        # print "{} {}".format(c, type(c))
+        # ret.append(c)
+        ret.append([lighter_colour(x) for x in c])
+    print "++++++++"
+
+    print "------"
+    for c in ret:
         print c
+    print "------"
+
 
     return map(rtoh, rgbs)
 

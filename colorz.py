@@ -32,9 +32,12 @@ def colorz(filename, n=3):
 
     points = get_points(img)
     clusters = kmeans(points, n, 1)
+    
+    print "___"
+
     rgbs = [map(int, c.center.coords) for c in clusters]
-    for c in rgbs:
-        print c
+    # for c in rgbs:
+    #     print c
 
 #        colours_sort.sort(key=lambda  x:darkness(x), reverse=True)
     rgbs_ = list(rgbs)
@@ -43,20 +46,21 @@ def colorz(filename, n=3):
     ret = list(rgbs_)
     
     
-    print "++++++++"
+    # print "++++++++"
+    #     # print "{} {}".format(c, type(c))
+    #     # ret.append(c)
+    # print "++++++++"
+
     for c in rgbs_:
-        # print "{} {}".format(c, type(c))
-        # ret.append(c)
         ret.append([lighter_colour(x) for x in c])
-    print "++++++++"
 
-    print "------"
-    for c in ret:
-        print c
-    print "------"
+    # print "------"
+    # for c in ret:
+    #     print c
+    # print "------"
 
 
-    return map(rtoh, rgbs)
+    return map(rtoh, ret)
 
 def euclidean(p1, p2):
     return sqrt(sum([

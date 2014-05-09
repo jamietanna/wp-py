@@ -37,12 +37,22 @@ def to_hsv(c):
     return h, s, v
 
 def get_colours(path):
-    colours = colorz(path, 16)
+    colours = colorz(path, 8)
     # ####### HACK! !!!!!!!!!!!!!!!!!!!!!!!!
     # colours = ['#774d38', '#4a3a2b', '#f1ae39', '#d37837', '#182220', '#a15330', '#0e1211', '#212e2c', '#5e4534', '#f6f5b6', '#28271f', '#f4de5b', '#434338', '#34352d', '#030201', '#649386']
 
+    print "<<<"
+    for c in colours:
+        print "{} {}".format(c, type(c))
+    print ">>>"
+
     colours_sort = list(colours)
     colours_sort.sort(key=lambda  x:darkness(x), reverse=True)
+
+
+    colours_sort_added = []
+    
+
 
     colours_normalised = []
     ret = []
@@ -67,6 +77,11 @@ def get_colours(path):
 
     for idx, val in enumerate(indexes):
         ret.append(colours_normalised[val])
+
+    
+
+    # pause
+    raw_input()
 
     return ret
 

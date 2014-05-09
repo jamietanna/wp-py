@@ -4,6 +4,7 @@ wp is a tool to change your background, and generate a colour scheme for your
  shell, and window manager. 
 """
 
+# TODO get 8 colours, and generate a slightly lighter version!!!
 # TODO change background, but not colours
 
 import sys

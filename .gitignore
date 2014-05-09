@@ -1,0 +1,2 @@
+Don't allow any compiled files to get in there
+*.pyc

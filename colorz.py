@@ -26,6 +26,15 @@ def colorz(filename, n=3):
     points = get_points(img)
     clusters = kmeans(points, n, 1)
     rgbs = [map(int, c.center.coords) for c in clusters]
+    for c in rgbs:
+        print c
+
+#        colours_sort.sort(key=lambda  x:darkness(x), reverse=True)
+    rgbs_ = list(rgbs)
+    rgbs_.sort(reverse=True)
+    for c in rgbs_:
+        print c
+
     return map(rtoh, rgbs)
 
 def euclidean(p1, p2):

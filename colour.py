@@ -1,9 +1,16 @@
-from colorz import colorz
+from colorz import colorz, rtoh
 from math   import sqrt
 import colorsys
 
 from array import array
 from generic import output
+
+def lighter_colour(colour):
+    ret = colour + 20
+    if ret > 255:
+        return 255
+    else:
+        return ret
 
 def torgb(hexv):
     hexv = hexv[1:]
@@ -37,7 +44,19 @@ def to_hsv(c):
     return h, s, v
 
 def get_colours(path):
-    colours = colorz(path, 8)
+    _colours = colorz(path, 8)
+
+    
+    _colours.sort()
+    colours = list(_colours)
+    
+    for c in _colours:
+        colours.append([lighter_colour(x) for x in c])
+
+    colours = map(rtoh, colours)
+
+
+
     # ####### HACK! !!!!!!!!!!!!!!!!!!!!!!!!
     # colours = ['#774d38', '#4a3a2b', '#f1ae39', '#d37837', '#182220', '#a15330', '#0e1211', '#212e2c', '#5e4534', '#f6f5b6', '#28271f', '#f4de5b', '#434338', '#34352d', '#030201', '#649386']
 

@@ -18,14 +18,10 @@ def get_points(img):
 
 rtoh = lambda rgb: '#%s' % ''.join(('%02x' % p for p in rgb))
 
-def lighter_colour(colour):
-    ret = colour + 20
-    if ret > 255:
-        return 255
-    else:
-        return ret
-
 def colorz(filename, n=3):
+    """
+    Generate n rgb colours from a given filename. 
+    """
     img = Image.open(filename)
     img.thumbnail((200, 200))
     w, h = img.size
@@ -36,31 +32,7 @@ def colorz(filename, n=3):
     print "___"
 
     rgbs = [map(int, c.center.coords) for c in clusters]
-    # for c in rgbs:
-    #     print c
-
-#        colours_sort.sort(key=lambda  x:darkness(x), reverse=True)
-    rgbs_ = list(rgbs)
-    rgbs_.sort()
-
-    ret = list(rgbs_)
-    
-    
-    # print "++++++++"
-    #     # print "{} {}".format(c, type(c))
-    #     # ret.append(c)
-    # print "++++++++"
-
-    for c in rgbs_:
-        ret.append([lighter_colour(x) for x in c])
-
-    # print "------"
-    # for c in ret:
-    #     print c
-    # print "------"
-
-
-    return map(rtoh, ret)
+    return rgbs
 
 def euclidean(p1, p2):
     return sqrt(sum([

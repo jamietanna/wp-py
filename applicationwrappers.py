@@ -147,6 +147,7 @@ class I3wm(Windowmanager):
     """
     Update the I3WM colours. 
     """
+    # pylint: disable=w0107
     def __init__(self):
         super(I3wm, self).__init__("I3 Window Manager")
         error("NOTE: I3WM has not been implemented yet. ")

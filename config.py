@@ -12,6 +12,7 @@ WP_CONFIG_FILE = WP_DIRECTORY + "/.config"
 WP_CONFIG_SECTION = "wp"
 IS_DEBUG_MODE = True
 INDENT_STR = ":: "
+TINT_MULT = 0.25
 
 WM_CONFIG_KEY = "window_manager"
 BG_CONFIG_KEY = "background_manager"

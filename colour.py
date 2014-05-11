@@ -43,52 +43,86 @@ def to_hsv(c):
     h, s, v = colorsys.rgb_to_hsv(r, g, b)
     return h, s, v
 
+def get_diff_triple(l1, l2):
+    return [l2[idx] - val  for idx, val in enumerate(l1)]
+
 def get_diff(l1, l2):
-    return sum([l2[idx] - val  for idx, val in enumerate(l1)] )
+    return abs(sum(get_diff_triple(l1, l2)))
+
+def get_nearest_colours(colours):
+    print colours
+
+    for c in colours:
+        print "{}: {}".format(c, get_diff([0,0,0], c))
+
+    from_black = [(c, get_diff([0,0,0], c)) for c in colours]
+    from_black.sort(key=lambda x: x[1])
+    print from_black
+
+    # black and white are at both ends of the spectrum, then we
+    #  remove them so we can't possibly have them anywhere else
+    black = from_black[0][0]
+    white = from_black[-1][0]
+    colours = colours[1:-1]
+
+    # create a list so we can iterate through each individual list
+    from_s = []
+    
+    from_red = [(c, get_diff([205,0,0], c)) for c in colours]
+    from_grn = [(c, get_diff([0,205,0], c)) for c in colours]
+    from_ylw = [(c, get_diff([205,205,0], c)) for c in colours]
+    from_blu = [(c, get_diff([0,0,205], c)) for c in colours]
+    from_prp = [(c, get_diff([205,0,205], c)) for c in colours]
+    from_cyn = [(c, get_diff([0,205,205], c)) for c in colours]
+
+    # TODO: handle minus - abs() ? 
+
+    from_s = [from_red, from_grn, from_ylw, from_blu, from_prp, from_cyn]
+    for fr in from_s:
+        fr.sort(key=lambda x: x[1])
+        print fr
+
+    any_errors = False
+
+    for fr1 in from_s:
+        for fr2 in from_s:
+            if fr1 == fr2:
+                continue
+            else:
+                if fr1[0][0] == fr2[0][0]:
+                    print "colour {} is in multiple".format(fr1[0][0])
+                    any_errors = True
+    
+    if not any_errors:
+        print "NOW TO PROCESS"
+        red = from_red[0][0]
+        grn = from_grn[0][0]
+        ylw = from_ylw[0][0]
+        blu = from_blu[0][0]
+        prp = from_prp[0][0]
+        cyn = from_cyn[0][0]
+        return [black, red, grn, ylw, blu, prp, cyn, white]
+    else:
+        print "CANNOT CONTINUE: ELSE CASE NEEDED"
+        exit(1)
+
+
 
 
 def get_colours(path):
-    
-    # print torgb("#000000000000")
-    # print torgb("#CDCD00000000")
-    # print torgb("#0000CDCD0000")
-    # print torgb("#CDCDCDCD0000")
-    # print torgb("#00000000CDCD")
-    # print torgb("#CDCD0000CDCD")
-    # print torgb("#0000CDCDCDCD")
-    # print torgb("#FAFAEBEBD7D7")
-    # print torgb("#404040404040")
-    # print torgb("#FFFF00000000")
-    # print torgb("#0000FFFF0000")
-    # print torgb("#FFFFFFFF0000")
-    # print torgb("#00000000FFFF")
-    # print torgb("#FFFF0000FFFF")
-    # print torgb("#0000FFFFFFFF")
-    # print torgb("#FFFFFFFFFFFF")
-    
-
-    # 000000  (0, 0, 0)
-    # CD0000  (205, 0, 0)
-    # 00CD00  (0, 205, 0)
-    # CDCD00  (205, 205, 0)
-    # 0000CD  (0, 0, 205)
-    # CD00CD  (205, 0, 205)
-    # 00CDCD  (0, 205, 205)
-    # FAEBD7  (250, 235, 215)
-   
-    # 404040  (64, 64, 64)
-    # FF0000  (255, 0, 0)
-    # 00FF00  (0, 255, 0)
-    # FFFF00  (255, 255, 0)
-    # 0000FF  (0, 0, 255)
-    # FF00FF  (255, 0, 255)
-    # 00FFFF  (0, 255, 255)
-    # FFFFFF  (255, 255, 255)
-    
-
     _colours = colorz(path, 8)
     _colours.sort()
     colours = list(_colours)
+
+    print "***********************************"
+    print colours
+    print "***********************************"
+    
+    colours = get_nearest_colours(colours)
+    print "***********************************"
+    print colours
+    print "***********************************"
+
     
     for c in _colours:
         colours.append( [lighter_colour(x) for x in c] )

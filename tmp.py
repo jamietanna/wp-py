@@ -34,24 +34,13 @@ def get_nearest_colours(colours):
     from_black = [(c, get_diff([0,0,0], c)) for c in colours]
     from_black.sort(key=lambda x: x[1])
     print from_black
+    # black and white are at both ends of the spectrum, then we
+    #  remove them so we can't possibly have them anywhere else
     black = from_black[0][0]
     white = from_black[0][-1]
-
     colours = colours[1:-1]
 
-    # print "BLK: {}".format(black)
-    
-
-    # BLK   000000  (0, 0, 0)
-    # RED   CD0000  (205, 0, 0)
-    # GRN   00CD00  (0, 205, 0)
-    # YLW   CDCD00  (205, 205, 0)
-    # BLU   0000CD  (0, 0, 205)
-    # PRP   CD00CD  (205, 0, 205)
-    # CYN   00CDCD  (0, 205, 205)
-    # WHT   FAEBD7  (250, 235, 215)
-   
-
+    # create a list so we can iterate through each individual list
     from_s = []
     
     from_red = [(c, get_diff([205,0,0], c)) for c in colours]

@@ -47,7 +47,8 @@ def get_diff_triple(l1, l2):
     return [l2[idx] - val  for idx, val in enumerate(l1)]
 
 def get_diff(l1, l2):
-    return abs(sum(get_diff_triple(l1, l2)))
+    trip = get_diff_triple(l1, l2)
+    return abs(trip[0] * 2 + trip[1] * 3 + trip[2] * 4)
 
 def get_nearest_colours(colours):
     print "COLOURS: " + str(colours)
@@ -76,19 +77,24 @@ def get_nearest_colours(colours):
     from_cyn = [(c, get_diff([0,205,205], c)) for c in colours]
 
     from_s = [from_red, from_grn, from_ylw, from_blu, from_prp, from_cyn]
-    for fr in from_s:
+    print "?////////////////////////???"
+    for idx, fr in enumerate(from_s):
         fr.sort(key=lambda x: x[1])
-        print fr
+        print "{}:".format(idx)
+        for f in fr:
+            print "  " + str(f)
+    print "?////////////////////////???"
 
     any_errors = False
 
+   
     for idx1, fr1 in enumerate(from_s):
         for idx2, fr2 in enumerate(from_s):
             if idx1 == idx2:
                 continue
             else:
                 if fr1[0][0] == fr2[0][0]:
-                    print "colour {} is in multiple".format(fr1[0][0])
+                    print "colour {} is in multiple ({}, {})".format(fr1[0][0], idx1, idx2)
                     any_errors = True
     
     if not any_errors:

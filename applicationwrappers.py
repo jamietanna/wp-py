@@ -207,12 +207,12 @@ class Gnomeshellcolours(Configwriter):
     def format_colours_for_file(self, colours):
         _colours = []
 
-        for idx, c in enumerate(colours):
-            # remove hash temporarily
-            c = c[1:]
-            first = c[0:4]
-            middl = c[4:8]
-            last  = c[8:12]
+        for colour in colours:
+            # # remove hash temporarily
+            # c = c[1:]
+            first = colour[1:5]
+            middl = colour[5:9]
+            last  = colour[9:]
             _colours.append("#" + last + middl + first)
 
         return ":".join(colours)

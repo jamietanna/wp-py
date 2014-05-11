@@ -6,10 +6,6 @@ from colormath.color_objects import sRGBColor, LabColor
 from colormath.color_diff import delta_e_cie1976
 from colormath.color_conversions import convert_color
 
-
-from array import array
-from generic import output
-
 def tint(r,g,b):
     rt = r + (0.25 * (255 - r))
     gt = g + (0.25 * (255 - g))
@@ -25,7 +21,6 @@ def shade(r,g,b):
 def lighter_colour(colour):
     # http://stackoverflow.com/questions/6615002/given-an-rgb-value-how-do-i-create-a-tint-or-shade
     ret = colour + (0.45 * (255 - colour))
-
     if ret > 255:
         return 255
     else:
@@ -76,49 +71,27 @@ def rgb_compare_delta_e(rgb_1, rgb_2):
     return delta_e_cie1976(rgb_to_lab_color(rgb_1), rgb_to_lab_color(rgb_2))
 
 def get_nearest_colours(colours):
-
-    from_black = [(c, rgb_compare_delta_e([0,0,0], c)) for c in colours]
-    from_black.sort(key=lambda x: x[1])
-    black = from_black[0][0]
-
-    from_white = [(c, rgb_compare_delta_e([255, 255, 255], c)) for c in colours]
-    from_white.sort(key=lambda x: x[1])
-    white = from_white[0][0]   
+    from_s = [
+        [(c, rgb_compare_delta_e([0,   0,   0],   c)) for c in colours],
+        [(c, rgb_compare_delta_e([205, 0,   0],   c)) for c in colours],
+        [(c, rgb_compare_delta_e([0,   205, 0],   c)) for c in colours],
+        [(c, rgb_compare_delta_e([205, 205, 0],   c)) for c in colours],
+        [(c, rgb_compare_delta_e([0,   0,   205], c)) for c in colours],
+        [(c, rgb_compare_delta_e([205, 0,   205], c)) for c in colours],
+        [(c, rgb_compare_delta_e([0,   205, 205], c)) for c in colours],
+        [(c, rgb_compare_delta_e([255, 255, 255], c)) for c in colours]
+    ]
     
-    from_red = [(c, rgb_compare_delta_e([205,0,0], c)) for c in colours]
-    from_grn = [(c, rgb_compare_delta_e([0,205,0], c)) for c in colours]
-    from_ylw = [(c, rgb_compare_delta_e([205,205,0], c)) for c in colours]
-    from_blu = [(c, rgb_compare_delta_e([0,0,205], c)) for c in colours]
-    from_prp = [(c, rgb_compare_delta_e([205,0,205], c)) for c in colours]
-    from_cyn = [(c, rgb_compare_delta_e([0,205,205], c)) for c in colours]
-
-    from_s = [from_red, from_grn, from_ylw, from_blu, from_prp, from_cyn]
-  
-    any_errors = False
-    num_errors = 0
-
-    for idx1, fr1 in enumerate(from_s):
-        for idx2, fr2 in enumerate(from_s):
-            if idx1 == idx2:
-                continue
-            else:
-                if fr1[0][0] == fr2[0][0]:
-                    from_s[idx1] = fr1[1:]
-                    
     for idx, fr in enumerate(from_s):
         fr.sort(key=lambda x: x[1])
+  
+    for idx1, fr1 in enumerate(from_s):
+        for idx2, fr2 in enumerate(from_s):
+            if idx1 != idx2 and fr1[0][0] == fr2[0][0]:
+                    from_s[idx1] = fr1[1:]
 
-    if not any_errors:
-        red = from_s[0][0][0]
-        grn = from_s[1][0][0]
-        ylw = from_s[2][0][0]
-        blu = from_s[3][0][0]
-        prp = from_s[4][0][0]
-        cyn = from_s[5][0][0]
-        return [black, red, grn, ylw, blu, prp, cyn, white]
-    else:
-        print "CANNOT CONTINUE: ELSE CASE NEEDED"
-        exit(1)
+
+    return [ from_s[idx][0][0] for idx in list(xrange(len(from_s))) ]
 
 ## TODO: order in get is not what I'm setting
 
@@ -151,5 +124,5 @@ def get_colours(path):
 
     for c in colours:
         ret.append(tint(c[0], c[1], c[2]))
-    return map(rtoh, ret)
+    return [rtoh(colour) for colour in ret]
 

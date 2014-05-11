@@ -2,67 +2,15 @@ from colorz import colorz, rtoh
 from math   import sqrt
 import colorsys
 
-from colormath.color_objects import sRGBColor, LabColor
-from colormath.color_diff import delta_e_cie1976
+from colormath.color_objects     import sRGBColor, LabColor
+from colormath.color_diff        import delta_e_cie1976
 from colormath.color_conversions import convert_color
 
-def tint(r,g,b):
-    rt = r + (0.25 * (255 - r))
-    gt = g + (0.25 * (255 - g))
-    bt = b + (0.25 * (255 - b))
-    return rt, gt, bt
-
-def shade(r,g,b):
-    rs = r * 0.25
-    gs = g * 0.25
-    bs = b * 0.25
-    return rs, gs, bs
-
-def lighter_colour(colour):
-    # http://stackoverflow.com/questions/6615002/given-an-rgb-value-how-do-i-create-a-tint-or-shade
-    ret = colour + (0.45 * (255 - colour))
-    if ret > 255:
-        return 255
-    else:
-        return ret
-
-def torgb(hexv):
-    hexv = hexv[1:]
-    r, g, b = (
-        int(hexv[0:2], 16) / 256.0,
-        int(hexv[2:4], 16) / 256.0,
-        int(hexv[4:6], 16) / 256.0,
-    )
-    return r, g, b
-
-def normalize(hexv, minv=128, maxv=256):
-    r, g, b = torgb(hexv)
-    h, s, v = colorsys.rgb_to_hsv(r, g, b)
-    minv = minv / 256.0
-    maxv = maxv / 256.0
-    if v < minv:
-        v = minv
-    if v > maxv:
-        v = maxv
-    r, g, b = colorsys.hsv_to_rgb(h, s, v)
-    return '#{:02x}{:02x}{:02x}'.format(int(r * 256), int(g * 256), int(b * 256))
-
-def darkness(hexv):
-  r, g, b = torgb(hexv)
-  darkness = sqrt((255 - r) ** 2 + (255 - g) ** 2 + (255 - b) ** 2)
-  return darkness
-
-def to_hsv(c):
-    r, g, b = torgb(c)
-    h, s, v = colorsys.rgb_to_hsv(r, g, b)
-    return h, s, v
-
-def get_diff_triple(l1, l2):
-    return [l2[idx] - val  for idx, val in enumerate(l1)]
-
-def get_diff(l1, l2):
-    trip = get_diff_triple(l1, l2)
-    return abs(trip[0] * 2 + trip[1] * 3 + trip[2] * 4)
+def tint(red, green, blue):
+    red_tint   = red   + (0.25 * (255 - red))
+    green_tint = green + (0.25 * (255 - green))
+    blue_tint  = blue  + (0.25 * (255 - blue))
+    return  red_tint, green_tint, blue_tint
 
 def rgb_to_lab_color(rgb):
     return convert_color(sRGBColor(rgb[0], rgb[1], rgb[2]), LabColor)
@@ -71,6 +19,11 @@ def rgb_compare_delta_e(rgb_1, rgb_2):
     return delta_e_cie1976(rgb_to_lab_color(rgb_1), rgb_to_lab_color(rgb_2))
 
 def get_nearest_colours(colours):
+    """
+    Given a list of colours from a file, return the colours which are 
+     most like the [BLACK, RED, GREEN, YELLOW, BLUE, PURPLE, CYAN, WHITE]
+     as per the terminal (and /probably/ other) standards
+    """
     from_s = [
         [(c, rgb_compare_delta_e([0,   0,   0],   c)) for c in colours],
         [(c, rgb_compare_delta_e([205, 0,   0],   c)) for c in colours],
@@ -82,47 +35,31 @@ def get_nearest_colours(colours):
         [(c, rgb_compare_delta_e([255, 255, 255], c)) for c in colours]
     ]
     
-    for idx, fr in enumerate(from_s):
-        fr.sort(key=lambda x: x[1])
+    for idx, colour_list in enumerate(from_s):
+        colour_list.sort(key=lambda x: x[1])
   
     for idx1, fr1 in enumerate(from_s):
         for idx2, fr2 in enumerate(from_s):
             if idx1 != idx2 and fr1[0][0] == fr2[0][0]:
-                    from_s[idx1] = fr1[1:]
+                from_s[idx1] = fr1[1:]
 
 
     return [ from_s[idx][0][0] for idx in list(xrange(len(from_s))) ]
-
-## TODO: order in get is not what I'm setting
-
-# #000000000000
-# #CDCD00000000
-# #0000CDCD0000
-# #CDCDCDCD0000
-# #00000000CDCD
-# #CDCD0000CDCD
-# #0000CDCDCDCD
-
-## TODO: FFFFFFF should be the bold one - make sure we know that the white we're returned takes this into account
-# #FFFFFFFFFFFF
- 
-# #000000000000
-# #00000000cdcd
-# #00000000cdcd
-# #0000cdcdcdcd
-# #00000000cdcd
-# #0000cdcdcdcd
-# #0000cdcdcdcd
-# #ffffffffffff
+## TODO: FFFFFFF should be the bold one - make sure we know that the
+#    white we're returned takes this into account
 
 def get_colours(path): 
+    """
+    Given a file, extract the 8 most prominent colours, and 
+     generate the corresponding tints
+    """
     _colours = colorz(path, 8)
     _colours.sort()
 
     colours = get_nearest_colours(_colours)
     ret = list(colours)
 
-    for c in colours:
-        ret.append(tint(c[0], c[1], c[2]))
+    for colour in colours:
+        ret.append(tint(colour[0], colour[1], colour[2]))
     return [rtoh(colour) for colour in ret]
 

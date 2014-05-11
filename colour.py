@@ -5,8 +5,34 @@ import colorsys
 from array import array
 from generic import output
 
+def limit(n, lim):
+    if n > lim:
+        return lim
+    else:
+        return n
+
+def tint(r,g,b):
+    rt = r + (0.25 * (255 - r))
+    gt = g + (0.25 * (255 - g))
+    bt = b + (0.25 * (255 - b))
+
+    # rt = limit((r * 1.25), 255) #  + (0.25 * (255 - r))
+    # gt = limit((g * 1.25), 255) # + (0.25 * (255 - g))
+    # bt = limit((b * 1.25), 255) # + (0.25 * (255 - b))
+
+    return rt, gt, bt
+
+def shade(r,g,b):
+    rs = r * 0.25
+    gs = g * 0.25
+    bs = b * 0.25
+    return rs, gs, bs
+
 def lighter_colour(colour):
-    ret = colour + 20
+    # http://stackoverflow.com/questions/6615002/given-an-rgb-value-how-do-i-create-a-tint-or-shade
+    ret = colour + (0.25 * (255 - colour))
+    # ONLY if high enough ?? 
+
     if ret > 255:
         return 255
     else:
@@ -114,8 +140,6 @@ def get_nearest_colours(colours):
         exit(1)
 
 
-
-
 ## TODO: order in get is not what I'm setting
 
 # #000000000000
@@ -137,30 +161,37 @@ def get_nearest_colours(colours):
 # #0000cdcdcdcd
 # #0000cdcdcdcd
 # #ffffffffffff
- 
-def get_colours(path):
+
+def get_colours(path): 
     _colours = colorz(path, 8)
     _colours.sort()
-    colours = list(_colours)
 
+    print "***********************************"
+    print _colours
+    print "***********************************"
+    
+    colours = get_nearest_colours(_colours)
     print "***********************************"
     print colours
     print "***********************************"
     
-    colours = get_nearest_colours(colours)
-    print "***********************************"
-    print colours
-    print "***********************************"
+    # print "+++++++++++++++++++++++++++++++++++++++++++++"
+    # for idx,c in enumerate(colours):
+    #     print "{}:\t{}\t{}".format(idx, c, [lighter_colour(x) for x in c])
+    # print "+++++++++++++++++++++++++++++++++++++++++++++"
 
-    
-    for c in _colours:
-        colours.append( [lighter_colour(x) for x in c] )
+    ret = list(colours)
 
-    colours = map(rtoh, colours)
-    colours_normalised = []
-    ret = []
+    print "????????????????????????????????????????????????"
+    for c in colours:
+        print "{}:\tt({})\ts({})".format(c, tint(c[0], c[1], c[2]), shade(c[0], c[1], c[2]))
+        # colours.append( [lighter_colour(x) for x in c] )
+        ret.append(tint(c[0], c[1], c[2]))
+    print "????????????????????????????????????????????????"
 
-    for idx, c in enumerate(colours):
+    ret = map(rtoh, ret)
+
+    for idx, c in enumerate(ret):
         print "{}: {}".format(idx, c)
     
-    return colours # ret
+    return ret

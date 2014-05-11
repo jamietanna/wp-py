@@ -29,8 +29,6 @@ def colorz(filename, n=3):
     points = get_points(img)
     clusters = kmeans(points, n, 1)
     
-    print "___"
-
     rgbs = [map(int, c.center.coords) for c in clusters]
     return rgbs
 

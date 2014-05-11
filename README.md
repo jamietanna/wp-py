@@ -3,11 +3,15 @@
 `wp` is a tool to change your background, and update your system colours based on the background. 
 
 ## Credits
-This is a rewrite in Python 2 of the version by [Caleb Everett](https://github.com/everett1992/wp). The files [colorz.py](colorz.py) and [colour.py](colour.py) are *predominantly* his. 
+This is a rewrite in Python 2 of the version by [Caleb Everett](https://github.com/everett1992/wp). [colorz.py](colorz.py) is *predominantly* his. 
 
 ## Dependencies
-> *As far as I know this only relies on PIL, python image library. I was able to fulfill this dependency with the `python-pillow` package on Arch Linux. On other systems, `pip install Pillow`.*
-From [Caleb's README](https://github.com/everett1992/wp/blob/master/README.md#dependencies).
+In terms of dependencies, there are two dependencies that I know of, which can be fixed with the following:
+
+```
+pip install python-pillow
+pip install colormath
+```
 
 Please note that this has only been tested on Ubuntu 13.10, and not on any other setup. If there are any issues, please submit an issue ticket and I will try and correct any issues. 
 
@@ -28,6 +32,7 @@ At time of writing, `wp` supports the following Window Managers:
 - Gnome
 
 In order to access `wp` from any directory, add the following line to your `.bashrc` or `.zshrc`:
+
 ```
 alias wp="/path/to/wp/directory/wp"
 ```

@@ -101,12 +101,36 @@ def get_nearest_colours(colours):
         blu = from_blu[0][0]
         prp = from_prp[0][0]
         cyn = from_cyn[0][0]
-        return [black, red, grn, ylw, blu, prp, cyn, white]
+        ret = [black, red, grn, ylw, blu, prp, cyn, white]
+        for idx, r in enumerate(ret):
+            print "{}: {}".format(idx, r)
+        return ret
     else:
         print "CANNOT CONTINUE: ELSE CASE NEEDED"
         exit(1)
 
 
+
+
+## TODO: order in get is not what I'm setting
+
+# #000000000000
+# #CDCD00000000
+# #0000CDCD0000
+# #CDCDCDCD0000
+# #00000000CDCD
+# #CDCD0000CDCD
+# #0000CDCDCDCD
+# #FAFAEBEBD7D7
+# #404040404040
+# #FFFF00000000
+# #0000FFFF0000
+# #FFFFFFFF0000
+# #00000000FFFF
+# #FFFF0000FFFF
+# #0000FFFFFFFF
+# #FFFFFFFFFFFF
+ 
 
 
 def get_colours(path):
@@ -131,16 +155,7 @@ def get_colours(path):
     colours_normalised = []
     ret = []
 
-    for i, c in enumerate(colours):
-        if i == 0:
-            c = normalize(c, minv=0, maxv=32)
-        elif i == 8:
-            c = normalize(c, minv=128, maxv=192)
-        elif i < 8:
-            c = normalize(c, minv=160, maxv=224)
-        else:
-            c = normalize(c, minv=200, maxv=256)
-        c = normalize(c, minv=32, maxv=224)
-        ret.append(c)
+    for idx, c in enumerate(colours):
+        print "{}: {}".format(idx, c)
     
-    return ret
+    return colours # ret

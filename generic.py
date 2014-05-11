@@ -63,6 +63,10 @@ def execute(args):
     Execute a given command (denoted by args), informing user of an error
      and if config.IS_DEBUG_MODE, output the error code. 
     """
+    
+    for a in args:
+        print a
+
     ret = subprocess.call(args)
     if not ret == 0:
         error("Some unknown error occured when executing {}".

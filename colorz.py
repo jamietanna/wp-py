@@ -16,7 +16,7 @@ def get_points(img):
         points.append(Point(color, 3, count))
     return points
 
-rtoh = lambda rgb: '#%s' % ''.join(('%02x' % p for p in rgb))
+rtoh = lambda rgb: '#%s' % ''.join((('%02x' % p) * 2 for p in rgb))
 
 def colorz(filename, n=3):
     """

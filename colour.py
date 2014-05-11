@@ -43,44 +43,61 @@ def to_hsv(c):
     h, s, v = colorsys.rgb_to_hsv(r, g, b)
     return h, s, v
 
-def get_colours(path):
-    _colours = colorz(path, 8)
+def get_diff(l1, l2):
+    return sum([l2[idx] - val  for idx, val in enumerate(l1)] )
 
+
+def get_colours(path):
     
+    # print torgb("#000000000000")
+    # print torgb("#CDCD00000000")
+    # print torgb("#0000CDCD0000")
+    # print torgb("#CDCDCDCD0000")
+    # print torgb("#00000000CDCD")
+    # print torgb("#CDCD0000CDCD")
+    # print torgb("#0000CDCDCDCD")
+    # print torgb("#FAFAEBEBD7D7")
+    # print torgb("#404040404040")
+    # print torgb("#FFFF00000000")
+    # print torgb("#0000FFFF0000")
+    # print torgb("#FFFFFFFF0000")
+    # print torgb("#00000000FFFF")
+    # print torgb("#FFFF0000FFFF")
+    # print torgb("#0000FFFFFFFF")
+    # print torgb("#FFFFFFFFFFFF")
+    
+
+    # 000000  (0, 0, 0)
+    # CD0000  (205, 0, 0)
+    # 00CD00  (0, 205, 0)
+    # CDCD00  (205, 205, 0)
+    # 0000CD  (0, 0, 205)
+    # CD00CD  (205, 0, 205)
+    # 00CDCD  (0, 205, 205)
+    # FAEBD7  (250, 235, 215)
+   
+    # 404040  (64, 64, 64)
+    # FF0000  (255, 0, 0)
+    # 00FF00  (0, 255, 0)
+    # FFFF00  (255, 255, 0)
+    # 0000FF  (0, 0, 255)
+    # FF00FF  (255, 0, 255)
+    # 00FFFF  (0, 255, 255)
+    # FFFFFF  (255, 255, 255)
+    
+
+    _colours = colorz(path, 8)
     _colours.sort()
     colours = list(_colours)
     
     for c in _colours:
-        colours.append([lighter_colour(x) for x in c])
+        colours.append( [lighter_colour(x) for x in c] )
 
     colours = map(rtoh, colours)
-
-
-
-    # ####### HACK! !!!!!!!!!!!!!!!!!!!!!!!!
-    # colours = ['#774d38', '#4a3a2b', '#f1ae39', '#d37837', '#182220', '#a15330', '#0e1211', '#212e2c', '#5e4534', '#f6f5b6', '#28271f', '#f4de5b', '#434338', '#34352d', '#030201', '#649386']
-
-    # print "<<<"
-    # for c in colours:
-    #     print "{} {}".format(c, type(c))
-    # print ">>>"
-
-    colours_sort = list(colours)
-    # colours_sort.sort(key=lambda  x:darkness(x), reverse=True)
-
-
-    colours_sort_added = []
-    
-
-
     colours_normalised = []
     ret = []
 
-    indexes = array('i', [0] * 16)
-    for idx, c in enumerate(colours_sort):
-        indexes[colours.index(c)] = idx
-
-    for i, c in enumerate(colours_sort):
+    for i, c in enumerate(colours):
         if i == 0:
             c = normalize(c, minv=0, maxv=32)
         elif i == 8:
@@ -90,17 +107,6 @@ def get_colours(path):
         else:
             c = normalize(c, minv=200, maxv=256)
         c = normalize(c, minv=32, maxv=224)
-        colours_normalised.append(c)
-
-    # for c in colours_normalised:
-
-    for idx, val in enumerate(indexes):
-        ret.append(colours_normalised[val])
-
+        ret.append(c)
     
-
-    # pause
-    # raw_input()
-
     return ret
-

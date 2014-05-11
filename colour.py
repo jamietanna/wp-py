@@ -2,6 +2,12 @@ from colorz import colorz, rtoh
 from math   import sqrt
 import colorsys
 
+
+from colormath.color_objects import sRGBColor, LabColor
+from colormath.color_diff import delta_e_cie1976
+from colormath.color_conversions import convert_color
+
+
 from array import array
 from generic import output
 
@@ -30,7 +36,7 @@ def shade(r,g,b):
 
 def lighter_colour(colour):
     # http://stackoverflow.com/questions/6615002/given-an-rgb-value-how-do-i-create-a-tint-or-shade
-    ret = colour + (0.25 * (255 - colour))
+    ret = colour + (0.45 * (255 - colour))
     # ONLY if high enough ?? 
 
     if ret > 255:
@@ -76,7 +82,83 @@ def get_diff(l1, l2):
     trip = get_diff_triple(l1, l2)
     return abs(trip[0] * 2 + trip[1] * 3 + trip[2] * 4)
 
+def rgb_to_lab_color(rgb):
+    return convert_color(sRGBColor(rgb[0], rgb[1], rgb[2]), LabColor)
+
+def rgb_compare_delta_e(rgb_1, rgb_2):
+    return delta_e_cie1976(rgb_to_lab_color(rgb_1), rgb_to_lab_color(rgb_2))
+
 def get_nearest_colours(colours):
+
+    from_black = [(c, rgb_compare_delta_e([0,0,0], c)) for c in colours]
+    print from_black
+    from_black.sort(key=lambda x: x[1])
+    print from_black
+
+    from_white = [(c, rgb_compare_delta_e([255, 255, 255], c)) for c in colours]
+    print from_white
+    from_white.sort(key=lambda x: x[1])
+    print from_white
+    
+
+    black = from_black[0][0]
+    white = from_white[0][0]   
+   
+    from_s = []
+    
+    from_red = [(c, rgb_compare_delta_e([205,0,0], c)) for c in colours]
+    from_grn = [(c, rgb_compare_delta_e([0,205,0], c)) for c in colours]
+    from_ylw = [(c, rgb_compare_delta_e([205,205,0], c)) for c in colours]
+    from_blu = [(c, rgb_compare_delta_e([0,0,205], c)) for c in colours]
+    from_prp = [(c, rgb_compare_delta_e([205,0,205], c)) for c in colours]
+    from_cyn = [(c, rgb_compare_delta_e([0,205,205], c)) for c in colours]
+
+    from_s = [from_red, from_grn, from_ylw, from_blu, from_prp, from_cyn]
+  
+    from_s = [from_red, from_grn, from_ylw, from_blu, from_prp, from_cyn]
+    print "?////////////////////////???"
+    for idx, fr in enumerate(from_s):
+        fr.sort(key=lambda x: x[1])
+        print "{}:".format(idx)
+        for f in fr:
+            print "  " + str(f)
+    print "?////////////////////////???"
+
+    any_errors = False
+
+    for idx1, fr1 in enumerate(from_s):
+        for idx2, fr2 in enumerate(from_s):
+            if idx1 == idx2:
+                continue
+            else:
+                if fr1[0][0] == fr2[0][0]:
+                    print "colour {} is in multiple ({}, {})".format(fr1[0][0], idx1, idx2)
+                    any_errors = True
+
+    if not any_errors:
+        print "NOW TO PROCESS"
+
+        for idx, f in enumerate(from_s):
+            print "{}: {}".format(idx, f[0][0])
+        print "==========="
+
+        red = from_red[0][0]
+        grn = from_grn[0][0]
+        ylw = from_ylw[0][0]
+        blu = from_blu[0][0]
+        prp = from_prp[0][0]
+        cyn = from_cyn[0][0]
+        ret = [black, red, grn, ylw, blu, prp, cyn, white]
+        for idx, r in enumerate(ret):
+            print "{}: {}".format(idx, r)
+        return ret
+    else:
+        print "CANNOT CONTINUE: ELSE CASE NEEDED"
+        exit(1)
+
+ 
+
+def _get_nearest_colours(colours):
     print "COLOURS: " + str(colours)
 
     for c in colours:

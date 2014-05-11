@@ -125,6 +125,7 @@ def get_nearest_colours(colours):
     print "?////////////////////////???"
 
     any_errors = False
+    num_errors = 0
 
     for idx1, fr1 in enumerate(from_s):
         for idx2, fr2 in enumerate(from_s):
@@ -133,58 +134,14 @@ def get_nearest_colours(colours):
             else:
                 if fr1[0][0] == fr2[0][0]:
                     print "colour {} is in multiple ({}, {})".format(fr1[0][0], idx1, idx2)
-                    any_errors = True
+                    # any_errors = True
+                    # num_errors += 1
+                    print "fr1: {}".format(len(fr1))
+                    from_s[idx1] = fr1[1:]
+                    print "fr1[1:]: {}".format(len(from_s[idx1]))
 
-    if not any_errors:
-        print "NOW TO PROCESS"
-
-        for idx, f in enumerate(from_s):
-            print "{}: {}".format(idx, f[0][0])
-        print "==========="
-
-        red = from_red[0][0]
-        grn = from_grn[0][0]
-        ylw = from_ylw[0][0]
-        blu = from_blu[0][0]
-        prp = from_prp[0][0]
-        cyn = from_cyn[0][0]
-        ret = [black, red, grn, ylw, blu, prp, cyn, white]
-        for idx, r in enumerate(ret):
-            print "{}: {}".format(idx, r)
-        return ret
-    else:
-        print "CANNOT CONTINUE: ELSE CASE NEEDED"
-        exit(1)
-
- 
-
-def _get_nearest_colours(colours):
-    print "COLOURS: " + str(colours)
-
-    for c in colours:
-        print "{}: {}".format(c, get_diff([0,0,0], c))
-
-    from_black = [(c, get_diff([0,0,0], c)) for c in colours]
-    from_black.sort(key=lambda x: x[1])
-    print from_black
-
-    # black and white are at both ends of the spectrum, then we
-    #  remove them so we can't possibly have them anywhere else
-    black = from_black[0][0]
-    white = from_black[-1][0]
-    colours = colours[1:-1]
-
-    # create a list so we can iterate through each individual list
-    from_s = []
-    
-    from_red = [(c, get_diff([205,0,0], c)) for c in colours]
-    from_grn = [(c, get_diff([0,205,0], c)) for c in colours]
-    from_ylw = [(c, get_diff([205,205,0], c)) for c in colours]
-    from_blu = [(c, get_diff([0,0,205], c)) for c in colours]
-    from_prp = [(c, get_diff([205,0,205], c)) for c in colours]
-    from_cyn = [(c, get_diff([0,205,205], c)) for c in colours]
-
-    from_s = [from_red, from_grn, from_ylw, from_blu, from_prp, from_cyn]
+                    # fr2[0] = fr2[0][1:]
+                    
     print "?////////////////////////???"
     for idx, fr in enumerate(from_s):
         fr.sort(key=lambda x: x[1])
@@ -193,26 +150,20 @@ def _get_nearest_colours(colours):
             print "  " + str(f)
     print "?////////////////////////???"
 
-    any_errors = False
 
-   
-    for idx1, fr1 in enumerate(from_s):
-        for idx2, fr2 in enumerate(from_s):
-            if idx1 == idx2:
-                continue
-            else:
-                if fr1[0][0] == fr2[0][0]:
-                    print "colour {} is in multiple ({}, {})".format(fr1[0][0], idx1, idx2)
-                    any_errors = True
-    
     if not any_errors:
         print "NOW TO PROCESS"
-        red = from_red[0][0]
-        grn = from_grn[0][0]
-        ylw = from_ylw[0][0]
-        blu = from_blu[0][0]
-        prp = from_prp[0][0]
-        cyn = from_cyn[0][0]
+
+        for idx, f in enumerate(from_s):
+            print "{}: {}".format(idx, f[0][0])
+        print "==========="
+
+        red = from_s[0][0][0]
+        grn = from_s[1][0][0]
+        ylw = from_s[2][0][0]
+        blu = from_s[3][0][0]
+        prp = from_s[4][0][0]
+        cyn = from_s[5][0][0]
         ret = [black, red, grn, ylw, blu, prp, cyn, white]
         for idx, r in enumerate(ret):
             print "{}: {}".format(idx, r)
@@ -220,7 +171,6 @@ def _get_nearest_colours(colours):
     else:
         print "CANNOT CONTINUE: ELSE CASE NEEDED"
         exit(1)
-
 
 ## TODO: order in get is not what I'm setting
 

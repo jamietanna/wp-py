@@ -211,17 +211,17 @@ class Gnomeshellcolours(Configwriter):
         _colours = []
 
         for idx, c in enumerate(colours):
-            print "{}: {}".format(idx, c)
+            # print "{}: {}".format(idx, c)
             # remove hash temporarily
             c = c[1:]
             first = c[0:4]
             middl = c[4:8]
             last  = c[8:12]
             
-            print "{}: {}".format(idx, last + middl + first)
+            # print "{}: {}".format(idx, last + middl + first)
             _colours.append("#" + last + middl + first)
 
-        return ":".join(_colours)
+        return ":".join(colours)
 
     def get_path(self, base_path):
         return config.WP_DIRECTORY + "/." + os.path.basename(base_path) \

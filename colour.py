@@ -50,7 +50,7 @@ def get_diff(l1, l2):
     return abs(sum(get_diff_triple(l1, l2)))
 
 def get_nearest_colours(colours):
-    print colours
+    print "COLOURS: " + str(colours)
 
     for c in colours:
         print "{}: {}".format(c, get_diff([0,0,0], c))
@@ -75,8 +75,6 @@ def get_nearest_colours(colours):
     from_prp = [(c, get_diff([205,0,205], c)) for c in colours]
     from_cyn = [(c, get_diff([0,205,205], c)) for c in colours]
 
-    # TODO: handle minus - abs() ? 
-
     from_s = [from_red, from_grn, from_ylw, from_blu, from_prp, from_cyn]
     for fr in from_s:
         fr.sort(key=lambda x: x[1])
@@ -84,9 +82,9 @@ def get_nearest_colours(colours):
 
     any_errors = False
 
-    for fr1 in from_s:
-        for fr2 in from_s:
-            if fr1 == fr2:
+    for idx1, fr1 in enumerate(from_s):
+        for idx2, fr2 in enumerate(from_s):
+            if idx1 == idx2:
                 continue
             else:
                 if fr1[0][0] == fr2[0][0]:
@@ -121,18 +119,19 @@ def get_nearest_colours(colours):
 # #00000000CDCD
 # #CDCD0000CDCD
 # #0000CDCDCDCD
-# #FAFAEBEBD7D7
-# #404040404040
-# #FFFF00000000
-# #0000FFFF0000
-# #FFFFFFFF0000
-# #00000000FFFF
-# #FFFF0000FFFF
-# #0000FFFFFFFF
+
+## TODO: FFFFFFF should be the bold one - make sure we know that the white we're returned takes this into account
 # #FFFFFFFFFFFF
  
-
-
+# #000000000000
+# #00000000cdcd
+# #00000000cdcd
+# #0000cdcdcdcd
+# #00000000cdcd
+# #0000cdcdcdcd
+# #0000cdcdcdcd
+# #ffffffffffff
+ 
 def get_colours(path):
     _colours = colorz(path, 8)
     _colours.sort()
